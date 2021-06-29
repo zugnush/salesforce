@@ -92,15 +92,15 @@
 
 (defn all-versions
   "Lists all available versions of the Salesforce REST API"
-  []
-  (->> (http/get "http://na1.salesforce.com/services/data/")
+  [token]
+  (->> (http/get (str (:instance_url token) "/services/data/"))
        :body
        (json/parse-string)))
 
 (defn latest-version
   "What is the latest API version?"
-  []
-  (->> (last (all-versions))
+  [token]
+  (->> (last (all-versions token))
        (map (fn [[k _]] [(keyword k) _]))
        (into {})
        :version))
